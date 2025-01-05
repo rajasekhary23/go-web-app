@@ -1,0 +1,54 @@
+name: Secret Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Secret Scanning
+      uses: trufflesecurity/trufflehog@main
+      with:
+        extra_args: --results=verified,unknown
+    
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: trufflehog-results
+    
+    - name: Print results
+      run: cat trufflehog-results/results.json
+    
+    - name: Fail if secrets found
+      run: |
+        if [ -s trufflehog-results/results.json ]; then
+          echo "Secrets found!"
+          exit 1
+        else
+          echo "No secrets found."
+        fi
+    
+    - name: Print git Variables
+      run: |
+        echo "-------------------YRS-------------------"
+        echo "repository - ${{ github.repository }}"
+        echo "head_ref - ${{ github.head_ref }}"
+        echo "ref_name - ${{ github.ref_name }}"
+        echo "event_name - ${{ github.event_name }}"
+        echo "REPO_NAME - ${{ github.event.repository.name }}"
+
+        echo "${{ github.event.pull_request.title }}"
+        echo "${{ github.event.pull_request.body }}"
+        echo "${{ github.event.pull_request.user.name }}"
+        echo "${{ github.event.pull_request.user.email }}"
+        
