@@ -18,7 +18,6 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         extra_args: '--max_depth 0 --json'  # Pass the args directly
-        path: .  # This would be the path where TruffleHog scans
 
     - name: Upload TruffleHog Report as an artifact
       uses: actions/upload-artifact@v3
