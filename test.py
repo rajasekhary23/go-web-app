@@ -14,6 +14,7 @@ def _get_db_connection():
 
 @app.get("/")
 def read_root():
+    secret = "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dummy"
     return { "message": "Hello World!"}
 
 
