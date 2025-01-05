@@ -23,7 +23,7 @@ jobs:
 
     - name: Run TruffleHog Scan
       run: |
-        trufflehog filesystem --directory . --json > trufflehog_results.json
+        trufflehog filesystem . --json > trufflehog_results.json
 
     - name: Upload TruffleHog results as an artifact
       uses: actions/upload-artifact@v4
