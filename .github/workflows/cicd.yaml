@@ -17,11 +17,8 @@ jobs:
     - name: Run TruffleHog secret scan
       uses: trufflesecurity/trufflehog@main
       with:
-        repository: ${{ github.repository }}
-        output: trufflehog_report.json
-        format: json
-        max_depth: 0 # Scan all commits
-        branch: main
+        extra_args: '--max_depth 0 --branch main --json'  # Pass the args directly
+        path: .  # This would be the path where TruffleHog scans
 
     - name: Upload TruffleHog Report as an artifact
       uses: actions/upload-artifact@v3
@@ -31,6 +28,7 @@ jobs:
 
     - name: Check for secrets in the report
       run: |
+        cat trufflehog_report.json
         if grep -q '\"Found\" : true' trufflehog_report.json; then
           echo "Secrets found!"
           exit 1
