@@ -44,8 +44,9 @@ jobs:
       run: |
         echo "-------------------YRS-------------------"
         ls -lart
-        ls -lart ${{ github.repository }}
-        ls -lart ${{ github.event.repository.name }}
+        pwd
+        ls -lart ../
+        ls -lart ../../
         echo "repository - ${{ github.repository }}"
         echo "REPO_NAME - ${{ github.event.repository.name }}"
         echo "head_ref - ${{ github.head_ref }}"
