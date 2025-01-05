@@ -17,7 +17,7 @@ jobs:
     - name: Run TruffleHog secret scan
       uses: trufflesecurity/trufflehog@main
       with:
-        path: ${{ github.repository }}
+        path: ./
         extra_args: '--max_depth 0 --json'  # Pass the args directly
 
     - name: Upload TruffleHog Report as an artifact
