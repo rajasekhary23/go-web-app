@@ -22,6 +22,9 @@ jobs:
       with:
         path: ./ # Path to scan
         extra_args:  --debug # Optional arguments to pass to trufflehog
+        output_format: json # Output format of the scan results
+        output_file: trufflehog-results.json # Output file to save the scan results
+      continue-on-error: false
     
     - name: Scan Results Status 
       if: steps.trufflehog.outcome == 'failure' 
