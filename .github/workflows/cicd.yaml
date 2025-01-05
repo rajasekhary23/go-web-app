@@ -21,7 +21,7 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./ # Path to scan
-        base: "${{ github.event.repository.default_branch }}" # Base branch to compare against
+        base: "" # Base branch to compare against
         head: ${{ github.ref_name }} # Branch to scan
         extra_args: --results=verified,unknown # Optional arguments to pass to trufflehog
     
