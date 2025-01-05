@@ -20,14 +20,16 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         extra_args: --results=verified,unknown
-    
+
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
         name: trufflehog-results
-    
+      continue-on-error: true
+
     - name: Print results
       run: cat trufflehog-results/results.json
+      continue-on-error: true
     
     - name: Fail if secrets found
       run: |
