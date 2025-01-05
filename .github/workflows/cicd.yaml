@@ -21,7 +21,7 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./ # Path to scan
-        extra_args:  --debug # Optional arguments to pass to trufflehog
+        extra_args:  --debug --github-actions --results=verified,unknown # Optional arguments to pass to trufflehog
     
     - name: Scan Results Status 
       if: steps.trufflehog.outcome == 'failure' 
