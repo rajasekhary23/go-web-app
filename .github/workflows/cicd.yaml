@@ -43,12 +43,15 @@ jobs:
     - name: Print git Variables
       run: |
         echo "-------------------YRS-------------------"
+        ls -lart
+        ls -lart ${{ github.repository }}
+        ls -lart ${{ github.event.repository.name }}
         echo "repository - ${{ github.repository }}"
+        echo "REPO_NAME - ${{ github.event.repository.name }}"
         echo "head_ref - ${{ github.head_ref }}"
         echo "ref_name - ${{ github.ref_name }}"
         echo "event_name - ${{ github.event_name }}"
-        echo "REPO_NAME - ${{ github.event.repository.name }}"
-
+        echo "Below Variables are for PR - pull request:"
         echo "${{ github.event.pull_request.title }}"
         echo "${{ github.event.pull_request.body }}"
         echo "${{ github.event.pull_request.user.name }}"
