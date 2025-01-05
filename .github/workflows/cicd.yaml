@@ -23,7 +23,7 @@ jobs:
 
     - name: Run TruffleHog Scan
       run: |
-        trufflehog git file://${{ github.repository }} --json > trufflehog_results.json
+        trufflehog git file://${{ github.event.repository.name }} --json > trufflehog_results.json
 
     - name: Upload TruffleHog results as an artifact
       uses: actions/upload-artifact@v4
@@ -36,6 +36,7 @@ jobs:
       run: |
         echo "TruffleHog found sensitive information in your repository!"
         exit 1
+      continue-on-error: false
     
     - name: Print git Variables
       run: |
