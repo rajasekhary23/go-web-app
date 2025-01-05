@@ -3,7 +3,7 @@ name: Secret Scan
 on:
   push:
     branches:
-      - main
+      - raja
   pull_request:
 
 jobs:
