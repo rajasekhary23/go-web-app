@@ -17,28 +17,23 @@ jobs:
         fetch-depth: 0
 
     - name: Secret Scanning
+      id: trufflehog
       uses: trufflesecurity/trufflehog@main
       with:
-        extra_args: --results=verified,unknown
+        path: ./ # Path to scan
+        base: "${{ github.event.repository.default_branch }}" # Base branch to compare against
+        head: ${{ github.ref_name }} # Branch to scan
+        extra_args: --results=verified,unknown # Optional arguments to pass to trufflehog
+    
+    - name: Scan Results Status 
+      if: steps.trufflehog.outcome == 'failure' 
+      run: exit 1
 
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
         name: trufflehog-results
       continue-on-error: true
-
-    - name: Print results
-      run: cat trufflehog-results/results.json
-      continue-on-error: true
-    
-    - name: Fail if secrets found
-      run: |
-        if [ -s trufflehog-results/results.json ]; then
-          echo "Secrets found!"
-          exit 1
-        else
-          echo "No secrets found."
-        fi
     
     - name: Print git Variables
       run: |
