@@ -21,9 +21,7 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./ # Path to scan
-        base: "${{ github.event.repository.default_branch }}"
-        head: HEAD
-        extra_args:  --debug --only-verified # Optional arguments to pass to trufflehog
+        extra_args:  --debug # Optional arguments to pass to trufflehog
     
     - name: Scan Results Status 
       if: steps.trufflehog.outcome == 'failure' 
@@ -49,7 +47,4 @@ jobs:
         echo "event_name - ${{ github.event_name }}"
         echo "Below Variables are for PR - pull request:"
         echo "${{ github.event.pull_request.title }}"
-        echo "${{ github.event.pull_request.body }}"
-        echo "${{ github.event.pull_request.user.name }}"
-        echo "${{ github.event.pull_request.user.email }}"
         
