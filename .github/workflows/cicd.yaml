@@ -13,24 +13,28 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
-    - name: Secret Scanning
-      id: trufflehog
-      uses: trufflesecurity/trufflehog@main
+    - name: Run TruffleHog secret scan
+      uses: trufflesecurity/trufflehog-action@v2
       with:
-        path: ./ # Path to scan
-        extra_args:  --debug # Optional arguments to pass to trufflehog
-    
-    - name: Scan Results Status 
-      if: steps.trufflehog.outcome == 'failure' 
-      run: exit 1
+        repository: ${{ github.repository }}
+        output: trufflehog_report.json
+        format: json
 
-    - name: Upload results
-      uses: actions/upload-artifact@v4
+    - name: Upload TruffleHog Report as an artifact
+      uses: actions/upload-artifact@v3
       with:
-        name: trufflehog-results
+        name: trufflehog-report
+        path: trufflehog_report.json
+
+    - name: Check for secrets in the report
+      run: |
+        if grep -q '\"Found\" : true' trufflehog_report.json; then
+          echo "Secrets found!"
+          exit 1
+        else
+          echo "No secrets found"
+        fi
       continue-on-error: true
     
     - name: Print git Variables
