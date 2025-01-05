@@ -20,6 +20,8 @@ jobs:
         repository: ${{ github.repository }}
         output: trufflehog_report.json
         format: json
+        max_depth: 0 # Scan all commits
+        branch: main
 
     - name: Upload TruffleHog Report as an artifact
       uses: actions/upload-artifact@v3
