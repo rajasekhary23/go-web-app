@@ -22,7 +22,6 @@ jobs:
       with:
         path: ./ # Path to scan
         extra_args:  --debug # Optional arguments to pass to trufflehog
-      continue-on-error: false
     
     - name: Scan Results Status 
       if: steps.trufflehog.outcome == 'failure' 
