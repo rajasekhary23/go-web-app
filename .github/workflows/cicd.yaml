@@ -14,28 +14,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Run TruffleHog secret scan
-      uses: trufflesecurity/trufflehog@main
-      with:
-        path: ./
-        extra_args: '--max_depth 0 --json'  # Pass the args directly
+    - name: Set up Python
+      uses: actions/setup-python@v5
 
-    - name: Upload TruffleHog Report as an artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: trufflehog-report
-        path: trufflehog_report.json
-
-    - name: Check for secrets in the report
+    - name: Install TruffleHog
       run: |
-        cat trufflehog_report.json
-        if grep -q '\"Found\" : true' trufflehog_report.json; then
-          echo "Secrets found!"
-          exit 1
-        else
-          echo "No secrets found"
-        fi
-      continue-on-error: true
+        pip install trufflehog
+
+    - name: Run TruffleHog Scan
+      run: |
+        trufflehog filesystem --directory . --json > trufflehog_results.json
+
+    - name: Upload TruffleHog results as an artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: trufflehog-results
+        path: trufflehog_results.json
+
+    - name: Fail on sensitive data found
+      if: failure()
+      run: |
+        echo "TruffleHog found sensitive information in your repository!"
+        exit 1
     
     - name: Print git Variables
       run: |
