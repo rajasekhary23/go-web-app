@@ -9,4 +9,5 @@ RUN go build -o app
 # Final stage
 FROM scratch
 COPY --from=builder /app/app /app
+EXPOSE 8081
 ENTRYPOINT ["/app"]
