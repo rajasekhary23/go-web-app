@@ -4,10 +4,10 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN go build -o app
+RUN go build -o goapp
 
 # Final stage
 FROM scratch
-COPY --from=builder /app/app /app
+COPY --from=builder /app/goapp /goapp
 EXPOSE 8081
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["/goapp"]
