@@ -1,7 +1,7 @@
 # Builder stage
 FROM golang:1.22 AS builder
 WORKDIR /app
-COPY go.mod ./
+COPY go.mod ./app
 RUN go mod download
 COPY . .
 RUN go build -o goapp
@@ -10,4 +10,4 @@ RUN go build -o goapp
 FROM scratch
 COPY --from=builder /app/goapp /goapp
 EXPOSE 8081
-ENTRYPOINT ["./goapp"]
+ENTRYPOINT ["/goapp"]
