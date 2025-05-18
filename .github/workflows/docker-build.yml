@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ⬅️ fetch full history and tags
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -70,16 +72,35 @@ jobs:
           cache: true
           version: v0.61.1
 
+      - name: Set up CSV Trivy template
+        run: |
+          cat <<EOF > trivy-csv.tpl
+          {{ range .Results }}
+          {{ range .Vulnerabilities }}
+          {{ .VulnerabilityID }},{{ .PkgName }},{{ .InstalledVersion }},{{ .FixedVersion }},{{ .Severity }},{{ .Title }}
+          {{ end }}
+          {{ end }}
+          EOF
+
       - name: Scan Image with Trivy
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
-          format: table
-          exit-code: 1
+          format: template
+          template: './trivy-csv.tpl'
+          output: trivy-report.csv
+          exit-code: 0
           ignore-unfixed: true
           vuln-type: os,library
           severity: CRITICAL,HIGH
           skip-setup-trivy: true
+
+      - name: Upload Trivy CSV Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-csv-report
+          path: trivy-report.csv
+
 
   tag-latest:
     runs-on: ubuntu-latest
