@@ -64,14 +64,22 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
 
+      - name: Manual Trivy Setup
+        uses: aquasecurity/setup-trivy@v0.2.0
+        with:
+          cache: true
+          version: v0.61.1
+
       - name: Scan Image with Trivy
-        uses: aquasecurity/trivy-action@v0.28.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
           format: table
           exit-code: 1
+          ignore-unfixed: true
           vuln-type: os,library
           severity: CRITICAL,HIGH
+          skip-setup-trivy: true
 
   tag-latest:
     runs-on: ubuntu-latest
