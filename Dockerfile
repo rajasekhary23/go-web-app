@@ -10,4 +10,4 @@ RUN go build -o goapp
 FROM scratch
 COPY --from=builder /app/goapp /goapp
 EXPOSE 8081
-ENTRYPOINT ["/goapp"]
+ENTRYPOINT ["./goapp"]
