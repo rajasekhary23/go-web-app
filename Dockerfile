@@ -1,13 +1,12 @@
-FROM golang:1.19 AS builder
-ARG CGO_ENABLED=0
+# Builder stage
+FROM golang:1.22 AS builder
 WORKDIR /app
-
 COPY go.mod ./
 RUN go mod download
 COPY . .
+RUN go build -o app
 
-RUN go build
-
+# Final stage
 FROM scratch
-COPY --from=builder /app/server /server
-ENTRYPOINT ["/server"]
+COPY --from=builder /app/app /app
+ENTRYPOINT ["/app"]
