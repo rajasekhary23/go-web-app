@@ -8,7 +8,7 @@ import (
 func homePage(w http.ResponseWriter, r *http.Request) {
 	// Render the home html page from static folder
 	log.Println("Accessed path:", r.URL.Path)
-	http.ServeFile(w, r, "./static/home.html")
+	http.ServeFile(w, r, "static/home.html")
 }
 
 func coursePage(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +38,9 @@ func main() {
 
 	// Serve static assets (css, js, images) from /static/ URL path
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
+	
+	log.Println("Starting server on :8081")
+	
 	err := http.ListenAndServe("0.0.0.0:8081", nil)
 	if err != nil {
 		log.Fatal(err)
