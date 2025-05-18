@@ -1,12 +1,11 @@
-# Builder stage
 FROM golang:1.22 AS builder
 WORKDIR /app
-COPY go.mod .
+COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN go build -o goapp
+# Build statically for scratch
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o goapp
 
-# Final stage
 FROM scratch
 COPY --from=builder /app/goapp /goapp
 EXPOSE 8081
